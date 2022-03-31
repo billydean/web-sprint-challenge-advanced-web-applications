@@ -25,6 +25,8 @@ export default function App() {
 
   const logout = () => {
     // ✨ implement
+    window.localStorage.removeItem('token');
+    redirectToLogin();
     // If a token is in local storage it should be removed,
     // and a message saying "Goodbye!" should be set in its proper state.
     // In any case, we should redirect the browser back to the login screen,
@@ -81,6 +83,22 @@ export default function App() {
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
+    setMessage('');
+    setSpinnerOn(true);
+    axiosWithAuth().post(articlesUrl, article)
+      .then(res => {
+        setArticles([
+          ...articles,
+          res.data.article
+        ])
+      })
+      .catch(err => {
+        console.error(err);
+        redirectToLogin();
+      })
+      .finally(()=>{
+        setSpinnerOn(false)
+      })
   }
 
   const updateArticle = ({ article_id, article }) => {
@@ -108,7 +126,7 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="/articles" element={
             <>
-              <ArticleForm />
+              <ArticleForm postArticle={postArticle} />
               <Articles getArticles={getArticles} articles={articles}/>
             </>
           } />
