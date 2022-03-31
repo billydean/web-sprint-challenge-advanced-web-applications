@@ -41,8 +41,10 @@ export default function ArticleForm(props) {
         article_id: currentArticleId.article_id,
         article: values
       });
+      setValues(initialFormValues);
     } else {
       postArticle(values);
+      setValues(initialFormValues);
     }
     // ✨ implement
     // We must submit a new post or update an existing one,
@@ -57,6 +59,15 @@ export default function ArticleForm(props) {
 
   const isDisabled = () => {
     // ✨ implement
+    if ( values.title.trim().length >= 1 && values.text.trim().length >= 1) {
+      if (values.topic === ("React"||"JavaScript"||"Node")) {
+        return false;
+      } else {
+        return true; 
+      }
+    } else {
+      return true; 
+    }
     // Make sure the inputs have some values
   }
 

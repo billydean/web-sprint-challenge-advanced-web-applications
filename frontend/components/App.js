@@ -96,7 +96,7 @@ export default function App() {
       })
       .catch(err => {
         console.error(err);
-        redirectToLogin();
+        setMessage(err?.response?.data?.message)
       })
       .finally(()=>{
         setSpinnerOn(false);
@@ -118,7 +118,7 @@ export default function App() {
       })
       .catch(err => {
         console.error(err);
-        redirectToLogin();
+        setMessage(err?.response?.data?.message)
       })
       .finally(()=>{
         setSpinnerOn(false);
@@ -126,6 +126,22 @@ export default function App() {
   }
 
   const deleteArticle = article_id => {
+    setMessage('');
+    setSpinnerOn(true);
+    axiosWithAuth().delete(`${articlesUrl}/${article_id}`)
+      .then(res => {
+        setMessage(res.data.message);
+        setArticles(articles.filter(art => {
+          return art.article_id !== article_id
+        }))
+      })
+      .catch(err => {
+        console.error(err);
+        setMessage(err?.response?.data?.message)
+      })
+      .finally(()=>{
+        setSpinnerOn(false);
+      })
     // ✨ implement
   }
 
