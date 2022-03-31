@@ -92,19 +92,37 @@ export default function App() {
           ...articles,
           res.data.article
         ])
+        setMessage(res.data.message)
       })
       .catch(err => {
         console.error(err);
         redirectToLogin();
       })
       .finally(()=>{
-        setSpinnerOn(false)
+        setSpinnerOn(false);
       })
   }
 
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
-    // You got this!
+    setMessage('');
+    setSpinnerOn(true);
+    axiosWithAuth().put(`${articlesUrl}/${article_id}`, article)
+      .then(res => {
+        setArticles(articles.map(art => {
+          return art.article_id === article_id
+            ? res.data.article
+            : art
+        }))
+        setMessage(res.data.message);
+      })
+      .catch(err => {
+        console.error(err);
+        redirectToLogin();
+      })
+      .finally(()=>{
+        setSpinnerOn(false);
+      })
   }
 
   const deleteArticle = article_id => {

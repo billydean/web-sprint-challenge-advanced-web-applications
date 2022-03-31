@@ -5,6 +5,7 @@ const initialFormValues = { title: '', text: '', topic: '' }
 
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
+  const [tab, setTab] = useState("Create")
   // ✨ where are my props? Destructure them here
   const { 
     postArticle,
@@ -17,8 +18,10 @@ export default function ArticleForm(props) {
   useEffect(() => {
     if (currentArticleId) {
       setValues(currentArticleId);
+      setTab("Edit");
     } else {
       setValues(initialFormValues);
+      setTab("Create")
     }
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
@@ -33,7 +36,14 @@ export default function ArticleForm(props) {
 
   const onSubmit = evt => {
     evt.preventDefault();
-    postArticle(values);
+    if (currentArticleId) {
+      updateArticle({
+        article_id: currentArticleId.article_id,
+        article: values
+      });
+    } else {
+      postArticle(values);
+    }
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
@@ -42,6 +52,7 @@ export default function ArticleForm(props) {
   const cancelEdit = evt => {
     evt.preventDefault();
     setCurrentArticleId(null);
+    setTab("Create");
   }
 
   const isDisabled = () => {
@@ -53,7 +64,7 @@ export default function ArticleForm(props) {
     // ✨ fix the JSX: make the heading display either "Edit" or "Create"
     // and replace Function.prototype with the correct function
     <form id="form" onSubmit={onSubmit}>
-      <h2>Create Article</h2>
+      <h2>{tab} Article</h2>
       <input
         maxLength={50}
         onChange={onChange}
