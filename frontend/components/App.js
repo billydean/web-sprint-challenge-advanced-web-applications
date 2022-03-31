@@ -15,7 +15,7 @@ export default function App() {
   // ✨ MVP can be achieved with these states
   const [message, setMessage] = useState('')
   const [articles, setArticles] = useState([])
-  const [currentArticleId, setCurrentArticleId] = useState()
+  const [currentArticleId, setCurrentArticleId] = useState(null)
   const [spinnerOn, setSpinnerOn] = useState(false)
 
   // ✨ Research `useNavigate` in React Router v.6
@@ -26,6 +26,7 @@ export default function App() {
   const logout = () => {
     // ✨ implement
     window.localStorage.removeItem('token');
+    setMessage("Goodbye!");
     redirectToLogin();
     // If a token is in local storage it should be removed,
     // and a message saying "Goodbye!" should be set in its proper state.
@@ -114,7 +115,7 @@ export default function App() {
     // ✨ fix the JSX:  `Message`, `ArticleForm` expect props ❗
     <React.StrictMode>
       <Spinner on={spinnerOn}/>
-      <Message />
+      <Message message={message}/>
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
@@ -126,8 +127,8 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="/articles" element={
             <>
-              <ArticleForm postArticle={postArticle} />
-              <Articles getArticles={getArticles} articles={articles}/>
+              <ArticleForm postArticle={postArticle} setCurrentArticleId={setCurrentArticleId} updateArticle={updateArticle} currentArticleId={currentArticleId} articles={articles} />
+              <Articles getArticles={getArticles} articles={articles} deleteArticle={deleteArticle} setCurrentArticleId={setCurrentArticleId}/>
             </>
           } />
         </Routes>
